@@ -1,1 +1,24 @@
 name: CI
+on: [push]
+jobs:
+    lint:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - run: pip3 install -r requirements.txt
+            - run: pip3 install flake8
+            - run: flake8 main.py
+    doctest:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                python-versions: [3.6, 3.7, 3.8, 3.9]
+        steps:
+            - uses: actions/checkout@vs
+            - name: Set Up Python ${{ matrix.python-version}}
+              uses: actrions/setup-python@v2
+              with:
+                python-version: ${{ matrix.python-version}}
+            - run: pip3 install -r requirements.txt
+            - run: python -m doctest main.py
+                
